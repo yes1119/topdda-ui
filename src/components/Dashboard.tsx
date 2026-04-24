@@ -16,7 +16,6 @@ function formatTs(tsStr: string) {
   return tsStr;
 }
 
-// 두 좌표 사이 각도 계산 (북=0, 시계방향)
 function bearing(from: [number, number], to: [number, number]): number {
   const lat1 = (from[0] * Math.PI) / 180;
   const lat2 = (to[0] * Math.PI) / 180;
@@ -26,7 +25,6 @@ function bearing(from: [number, number], to: [number, number]): number {
   return ((Math.atan2(y, x) * 180) / Math.PI + 360) % 360;
 }
 
-// 차량 SVG 아이콘 생성 (색상 + 회전각도)
 function makeCarIcon(color: string, angle: number, label: string) {
   const html = `
     <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
@@ -60,7 +58,6 @@ export default function Dashboard({ devices, feed, onSelectDevice }: Props) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<L.Map | null>(null);
   const markersRef = useRef<Record<string, L.Marker>>({});
-  // 각 차량의 현재 waypoint 인덱스
   const routeIdxRef = useRef<Record<string, number>>(
     Object.fromEntries(devices.map((d) => [d.id, 0]))
   );
@@ -68,7 +65,7 @@ export default function Dashboard({ devices, feed, onSelectDevice }: Props) {
     Object.fromEntries(devices.map((d) => [d.id, [d.lat, d.lon]]))
   );
   const [tick, setTick] = useState(0);
-  const [isSatellite, setIsSatellite] = useState(false);
+  const [isSatellite, setIsSatellite] = useState(true);
   const tileLayerRef = useRef<L.TileLayer | null>(null);
 
   const TILES = {
@@ -76,12 +73,29 @@ export default function Dashboard({ devices, feed, onSelectDevice }: Props) {
     satellite: { url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", attr: "© Esri" },
   };
 
-  // 지도 초기화
+  // 지도 초기화 — 중심은 패드 GPS 위치, 실패 시 디바이스 평균 좌표
   useEffect(() => {
     if (!mapRef.current || mapInstance.current) return;
-    mapInstance.current = L.map(mapRef.current, { zoomControl: true }).setView([37.499, 127.040], 14);
-    tileLayerRef.current = L.tileLayer(TILES.street.url, { attribution: TILES.street.attr }).addTo(mapInstance.current);
-    setTimeout(() => mapInstance.current?.invalidateSize(), 200);
+
+    const avgLat = devices.reduce((s, d) => s + d.lat, 0) / devices.length;
+    const avgLon = devices.reduce((s, d) => s + d.lon, 0) / devices.length;
+
+    function initMap(lat: number, lon: number) {
+      if (!mapRef.current || mapInstance.current) return;
+      mapInstance.current = L.map(mapRef.current, { zoomControl: true }).setView([lat, lon], 14);
+      tileLayerRef.current = L.tileLayer(TILES.satellite.url, { attribution: TILES.satellite.attr }).addTo(mapInstance.current);
+      setTimeout(() => mapInstance.current?.invalidateSize(), 200);
+    }
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => initMap(pos.coords.latitude, pos.coords.longitude),
+        ()    => initMap(avgLat, avgLon),
+        { timeout: 5000 }
+      );
+    } else {
+      initMap(avgLat, avgLon);
+    }
   }, []);
 
   // 타일 레이어 전환
