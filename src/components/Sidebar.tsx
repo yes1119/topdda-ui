@@ -1,4 +1,4 @@
-import { LayoutDashboard, Map, Image, Cpu } from "lucide-react";
+import { LayoutDashboard, Image, Cpu } from "lucide-react";
 import type { Device } from "../types";
 
 type Page = "dashboard" | "detail" | "gallery" | "devices";
