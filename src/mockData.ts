@@ -1,10 +1,9 @@
 import type { Device, IotMessage } from "./types";
 
 export const MOCK_DEVICES: Device[] = [
-  { id: "edge-test-125", ip: "192.168.5.125", status: "detected", lastSeen: "2초 전",  todayDetections: 42, version: "v1.3.0", lat: 37.5012, lon: 127.0396, speed: 38.2, fixStatus: "4" },
+  { id: "edge-test-125", ip: "192.168.5.125", status: "online",   lastSeen: "2초 전",  todayDetections: 42, version: "v1.3.0", lat: 37.5012, lon: 127.0396, speed: 38.2, fixStatus: "4" },
   { id: "edge-test-126", ip: "192.168.5.126", status: "online",   lastSeen: "5초 전",  todayDetections: 17, version: "v1.3.0", lat: 37.4985, lon: 127.0451, speed: 52.1, fixStatus: "4" },
   { id: "edge-test-124", ip: "192.168.5.124", status: "online",   lastSeen: "8초 전",  todayDetections: 8,  version: "v1.3.0", lat: 37.5034, lon: 127.0312, speed: 12.0, fixStatus: "5" },
-  { id: "edge-test-129", ip: "192.168.5.129", status: "offline",  lastSeen: "23분 전", todayDetections: 3,  version: "v1.3.0", lat: 37.4960, lon: 127.0480, speed: 0.0,  fixStatus: "0" },
 ];
 
 // 각 차량의 이동 경로 waypoints (위도/경도 배열)
@@ -26,18 +25,10 @@ export const VEHICLE_ROUTES: Record<string, [number, number][]> = {
     [37.5038, 127.0352], [37.5028, 127.0348], [37.5020, 127.0335],
     [37.5025, 127.0320], [37.5034, 127.0312],
   ],
-  "edge-test-129": [
-    [37.4960, 127.0480], // offline - 고정
-  ],
 };
 
-const CLASSES = [
-  "building_under_cons", "excavator", "cable_sagging",
-  "tilted_pole", "protective_tube_defective", "manhole_defective",
-];
-
 function randomClass() {
-  return CLASSES[Math.floor(Math.random() * CLASSES.length)];
+  return "excavator";
 }
 
 function randomCoord(base: number, range: number) {
@@ -110,5 +101,4 @@ export const MOCK_HISTORY: Record<string, IotMessage[]> = {
   "edge-test-125": makeMockHistory("edge-test-125", 37.5012, 127.0396, 12),
   "edge-test-126": makeMockHistory("edge-test-126", 37.4985, 127.0451, 8),
   "edge-test-124": makeMockHistory("edge-test-124", 37.5034, 127.0312, 5),
-  "edge-test-129": makeMockHistory("edge-test-129", 37.4960, 127.0480, 2),
 };

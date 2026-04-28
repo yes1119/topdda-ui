@@ -14,7 +14,7 @@ export default function Devices({ devices, onSelectDevice }: Props) {
   return (
     <div className="p-4 h-full flex flex-col gap-4">
       <div className="flex items-center justify-between shrink-0">
-        <h2 className="text-white font-semibold text-lg">디바이스 관리</h2>
+        <h2 className="text-white font-semibold text-lg">차량 관리</h2>
         <span className="text-sm text-gray-400">{devices.filter((d) => d.status !== "offline").length}/{devices.length} 온라인</span>
       </div>
 
@@ -22,7 +22,7 @@ export default function Devices({ devices, onSelectDevice }: Props) {
         <table className="w-full text-sm">
           <thead className="bg-gray-700/60">
             <tr>
-              {["디바이스 ID", "IP", "상태", "마지막 수신", "오늘 검출", "GPS", "속도", "버전", ""].map((h) => (
+              {["차량 ID", "IP", "상태", "마지막 수신", "오늘 검출", "GPS", "속도", "버전", ""].map((h) => (
                 <th key={h} className="px-4 py-3 text-left text-gray-400 font-medium text-xs">{h}</th>
               ))}
             </tr>

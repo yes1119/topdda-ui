@@ -28,28 +28,36 @@ function bearing(from: [number, number], to: [number, number]): number {
 function makeCarIcon(color: string, angle: number, label: string) {
   const html = `
     <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
-      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
-        <g transform="rotate(${angle}, 16, 16)">
-          <ellipse cx="16" cy="16" rx="8" ry="12" fill="${color}" stroke="white" stroke-width="2"/>
-          <polygon points="16,4 12,10 20,10" fill="white" opacity="0.9"/>
-          <rect x="10" y="20" width="4" height="3" rx="1" fill="white" opacity="0.7"/>
-          <rect x="18" y="20" width="4" height="3" rx="1" fill="white" opacity="0.7"/>
-          <rect x="10" y="9" width="4" height="3" rx="1" fill="white" opacity="0.7"/>
-          <rect x="18" y="9" width="4" height="3" rx="1" fill="white" opacity="0.7"/>
-        </g>
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="48" viewBox="0 0 32 48" style="transform:rotate(${angle}deg);filter:drop-shadow(0 0 4px ${color})">
+        <!-- 차체 외형 -->
+        <rect x="5" y="4" width="22" height="40" rx="7" fill="${color}" stroke="white" stroke-width="1.5"/>
+        <!-- 앞범퍼 -->
+        <rect x="8" y="2" width="16" height="5" rx="3" fill="${color}" stroke="white" stroke-width="1"/>
+        <!-- 뒷범퍼 -->
+        <rect x="8" y="41" width="16" height="5" rx="3" fill="${color}" stroke="white" stroke-width="1"/>
+        <!-- 앞유리 -->
+        <rect x="8" y="10" width="16" height="8" rx="2" fill="white" opacity="0.85"/>
+        <!-- 뒷유리 -->
+        <rect x="8" y="30" width="16" height="7" rx="2" fill="white" opacity="0.6"/>
+        <!-- 루프 -->
+        <rect x="9" y="19" width="14" height="9" rx="1" fill="${color}" stroke="white" stroke-width="0.5" opacity="0.7"/>
+        <!-- 사이드미러 좌 -->
+        <rect x="1" y="12" width="4" height="3" rx="1.5" fill="${color}" stroke="white" stroke-width="1"/>
+        <!-- 사이드미러 우 -->
+        <rect x="27" y="12" width="4" height="3" rx="1.5" fill="${color}" stroke="white" stroke-width="1"/>
       </svg>
       <div style="background:rgba(0,0,0,0.75);color:#fff;font-size:10px;font-weight:600;padding:2px 6px;border-radius:4px;white-space:nowrap;border:1px solid ${color}">${label}</div>
     </div>`;
   return L.divIcon({
     html,
     className: "",
-    iconSize: [80, 52],
-    iconAnchor: [40, 16],
+    iconSize: [80, 68],
+    iconAnchor: [40, 24],
   });
 }
 
 const statusColor: Record<string, string> = {
-  online:   "#22c55e",
+  online:   "#3b82f6",
   offline:  "#9ca3af",
   detected: "#3b82f6",
 };
@@ -167,7 +175,7 @@ export default function Dashboard({ devices, feed, onSelectDevice }: Props) {
       {/* KPI 카드 */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12, flexShrink: 0 }}>
         {[
-          { label: "전체 디바이스",  value: `${onlineCount} / ${devices.length}`, sub: "온라인",     border: "#22c55e" },
+          { label: "전체 차량",  value: `${onlineCount} / ${devices.length}`, sub: "온라인",     border: "#22c55e" },
           { label: "오늘 검출",      value: totalDetections,                       sub: "건",         border: "#3b82f6" },
           { label: "최근 이상 감지", value: feed.filter((f) => CLASS_META[f.OBJECT_LIST?.[0]?.OBJECT_TYPE ?? ""]?.severity === "high").length, sub: "건 (1시간)", border: "#ef4444" },
           { label: "오늘 업로드",    value: totalDetections * 3,                   sub: "이미지",     border: "#a855f7" },
