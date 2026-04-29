@@ -422,7 +422,7 @@ function DetailPanel({ selItem, imgIdx, memo, setMemo, changeStatus, assignTo, s
       {/* 이미지 + 미니맵 */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, height: 320, flexShrink: 0 }}>
         <div style={{ borderRadius: 8, overflow: "hidden", border: "1px solid #374151" }}>
-          <img src={SAMPLE_IMAGES[imgIdx % SAMPLE_IMAGES.length]} alt="" style={{ width: "100%", height: "100%", objectFit: "contain", display: "block", background: "#111827" }} />
+          <img src={SAMPLE_IMAGES[imgIdx % SAMPLE_IMAGES.length]} alt="" style={{ width: "100%", height: "100%", objectFit: "fill", display: "block" }} />
         </div>
         <div style={{ borderRadius: 8, overflow: "hidden", border: "1px solid #374151", position: "relative" }}>
           <MiniMap lat={lat} lon={lon} color={meta?.color ?? "#3b82f6"} reported={risk.reported} />
