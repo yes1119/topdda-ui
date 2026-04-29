@@ -381,9 +381,29 @@ function DetailPanel({ selItem, imgIdx, memo, setMemo, changeStatus, assignTo, s
   const lon = parseFloat(selItem.msg.SENSOR.LON);
   const address = useAddress(lat, lon);
   const risk = mockRisk(selItem.id);
+  const [lightbox, setLightbox] = useState<string | null>(null);
 
   return (
     <div style={{ flex: 1, overflowY: "auto", padding: 20, display: "flex", flexDirection: "column", gap: 12 }}>
+
+      {/* 이미지 라이트박스 */}
+      {lightbox && (
+        <div
+          onClick={() => setLightbox(null)}
+          style={{
+            position: "fixed", inset: 0, zIndex: 9999,
+            background: "rgba(0,0,0,0.92)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            cursor: "zoom-out",
+          }}
+        >
+          <img src={lightbox} alt="" style={{ maxWidth: "95vw", maxHeight: "95vh", objectFit: "contain", borderRadius: 8 }} />
+          <button
+            onClick={() => setLightbox(null)}
+            style={{ position: "absolute", top: 20, right: 24, fontSize: 28, color: "#fff", background: "none", border: "none", cursor: "pointer", lineHeight: 1 }}
+          >✕</button>
+        </div>
+      )}
 
       {/* 헤더: ID + 상태 전환 버튼 */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexShrink: 0 }}>
@@ -421,8 +441,14 @@ function DetailPanel({ selItem, imgIdx, memo, setMemo, changeStatus, assignTo, s
 
       {/* 이미지 + 미니맵 */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, height: 320, flexShrink: 0 }}>
-        <div style={{ borderRadius: 8, overflow: "hidden", border: "1px solid #374151" }}>
+        <div
+          onClick={() => setLightbox(SAMPLE_IMAGES[imgIdx % SAMPLE_IMAGES.length])}
+          style={{ borderRadius: 8, overflow: "hidden", border: "1px solid #374151", cursor: "zoom-in", position: "relative" }}
+        >
           <img src={SAMPLE_IMAGES[imgIdx % SAMPLE_IMAGES.length]} alt="" style={{ width: "100%", height: "100%", objectFit: "fill", display: "block" }} />
+          <div style={{ position: "absolute", bottom: 6, right: 6, background: "rgba(0,0,0,0.55)", borderRadius: 4, padding: "2px 6px", fontSize: 10, color: "#fff" }}>
+            클릭하여 원본 보기
+          </div>
         </div>
         <div style={{ borderRadius: 8, overflow: "hidden", border: "1px solid #374151", position: "relative" }}>
           <MiniMap lat={lat} lon={lon} color={meta?.color ?? "#3b82f6"} reported={risk.reported} />
