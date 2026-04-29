@@ -422,7 +422,7 @@ function DetailPanel({ selItem, imgIdx, memo, setMemo, changeStatus, assignTo, s
       {/* 이미지 + 미니맵 */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, height: 320, flexShrink: 0 }}>
         <div style={{ borderRadius: 8, overflow: "hidden", border: "1px solid #374151" }}>
-          <img src={SAMPLE_IMAGES[imgIdx % SAMPLE_IMAGES.length]} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+          <img src={SAMPLE_IMAGES[imgIdx % SAMPLE_IMAGES.length]} alt="" style={{ width: "100%", height: "100%", objectFit: "contain", display: "block", background: "#111827" }} />
         </div>
         <div style={{ borderRadius: 8, overflow: "hidden", border: "1px solid #374151", position: "relative" }}>
           <MiniMap lat={lat} lon={lon} color={meta?.color ?? "#3b82f6"} reported={risk.reported} />
@@ -585,7 +585,7 @@ export default function Inbox({ feed }: Props) {
     <div style={{ display: "flex", height: "100%", overflow: "hidden" }}>
 
       {/* 좌측 리스트 */}
-      <div style={{ width: 400, display: "flex", flexDirection: "column", borderRight: "1px solid #374151", flexShrink: 0 }}>
+      <div style={{ width: "30%", minWidth: 260, maxWidth: 400, display: "flex", flexDirection: "column", borderRight: "1px solid #374151", flexShrink: 0 }}>
 
         {/* 상태 필터 탭 */}
         <div style={{ padding: "10px 14px", borderBottom: "1px solid #374151", display: "flex", gap: 5, flexWrap: "wrap" }}>
