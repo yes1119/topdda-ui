@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+ens-excavator-poc/
+스크린샷*
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
