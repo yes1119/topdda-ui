@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(mkdir -p /Users/a11164/Desktop/Project/topdda/topdda-ui/public/ens)",
+      "Bash(cp /Users/a11164/Desktop/Project/topdda/topdda-ui/ens-excavator-poc/*.jpg /Users/a11164/Desktop/Project/topdda/topdda-ui/public/ens/)",
+      "Bash(cp /Users/a11164/Desktop/Project/topdda/topdda-ui/ens-excavator-poc/*.mp4 /Users/a11164/Desktop/Project/topdda/topdda-ui/public/ens/)",
+      "Bash(xargs -I{} basename {})"
+    ]
+  }
+}

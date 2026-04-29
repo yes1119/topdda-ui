@@ -30,10 +30,18 @@ interface RiskData {
 
 function mockRisk(id: string): RiskData {
   const seed = parseInt(id.replace("INB-", ""), 10);
-  const score = +(((seed * 7.3) % 10)).toFixed(1);
-  const pipeDist = +((seed * 13.7) % 80 + 2).toFixed(1);
+  const pipeDist = +((seed * 13.7) % 78 + 2).toFixed(1);  // 2~80m
   const reported = seed % 3 === 0;
-  const duration = (seed * 11) % 40 + 1;
+  const duration = (seed * 11) % 40 + 1;                   // 1~40분
+
+  // 위험도 = 미신고 여부(가중 높음) + 배관 근접도 + 체류 시간
+  const reportedPenalty = reported ? 0 : 4.5;
+  const distScore = Math.max(0, (80 - pipeDist) / 80) * 3;   // 가까울수록 +3
+  const durScore = (duration / 40) * 2;                       // 길수록 +2
+  const raw = reportedPenalty + distScore + durScore;
+  // 신고됨: 1~5.5, 미신고: 5.5~9.5
+  const score = +Math.min(9.5, Math.max(1.0, raw)).toFixed(1);
+
   return { score, pipeDist, reported, duration };
 }
 
@@ -375,7 +383,7 @@ function DetailPanel({ selItem, imgIdx, memo, setMemo, changeStatus, assignTo, s
   const risk = mockRisk(selItem.id);
 
   return (
-    <div style={{ flex: 1, overflow: "hidden", padding: 20, display: "flex", flexDirection: "column", gap: 12 }}>
+    <div style={{ flex: 1, overflowY: "auto", padding: 20, display: "flex", flexDirection: "column", gap: 12 }}>
 
       {/* 헤더: ID + 상태 전환 버튼 */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexShrink: 0 }}>
@@ -412,7 +420,7 @@ function DetailPanel({ selItem, imgIdx, memo, setMemo, changeStatus, assignTo, s
       </div>
 
       {/* 이미지 + 미니맵 */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, flex: 1, minHeight: 0 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, height: 320, flexShrink: 0 }}>
         <div style={{ borderRadius: 8, overflow: "hidden", border: "1px solid #374151" }}>
           <img src={SAMPLE_IMAGES[imgIdx % SAMPLE_IMAGES.length]} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
         </div>
