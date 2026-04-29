@@ -30,11 +30,11 @@ export default function Sidebar({ devices, currentPage, onNavigate }: Props) {
         <button onClick={() => onNavigate("live")} style={BTN_STYLE} className={btn("live")}>
           <MonitorPlay size={18} /> 실시간 View
         </button>
-        <button onClick={() => onNavigate("devices")} style={BTN_STYLE} className={btn("devices")}>
-          <Cpu size={18} /> 차량 관리
-        </button>
         <button onClick={() => onNavigate("inbox")} style={BTN_STYLE} className={btn("inbox")}>
           <Inbox size={18} /> 탐지 이력 관리
+        </button>
+        <button onClick={() => onNavigate("devices")} style={BTN_STYLE} className={btn("devices")}>
+          <Cpu size={18} /> 차량 관리
         </button>
         <button onClick={() => onNavigate("report")} style={BTN_STYLE} className={btn("report")}>
           <BarChart2 size={18} /> 리포트

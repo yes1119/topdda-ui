@@ -73,7 +73,7 @@ export default function Dashboard({ devices, feed, onSelectDevice }: Props) {
     Object.fromEntries(devices.map((d) => [d.id, [d.lat, d.lon]]))
   );
   const [tick, setTick] = useState(0);
-  const [isSatellite, setIsSatellite] = useState(true);
+  const [isSatellite, setIsSatellite] = useState(false);
   const tileLayerRef = useRef<L.TileLayer | null>(null);
 
   const TILES = {
@@ -88,22 +88,9 @@ export default function Dashboard({ devices, feed, onSelectDevice }: Props) {
     const avgLat = devices.reduce((s, d) => s + d.lat, 0) / devices.length;
     const avgLon = devices.reduce((s, d) => s + d.lon, 0) / devices.length;
 
-    function initMap(lat: number, lon: number) {
-      if (!mapRef.current || mapInstance.current) return;
-      mapInstance.current = L.map(mapRef.current, { zoomControl: true }).setView([lat, lon], 14);
-      tileLayerRef.current = L.tileLayer(TILES.satellite.url, { attribution: TILES.satellite.attr }).addTo(mapInstance.current);
-      setTimeout(() => mapInstance.current?.invalidateSize(), 200);
-    }
-
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => initMap(pos.coords.latitude, pos.coords.longitude),
-        ()    => initMap(avgLat, avgLon),
-        { timeout: 5000 }
-      );
-    } else {
-      initMap(avgLat, avgLon);
-    }
+    mapInstance.current = L.map(mapRef.current, { zoomControl: true }).setView([avgLat, avgLon], 14);
+    tileLayerRef.current = L.tileLayer(TILES.street.url, { attribution: TILES.street.attr }).addTo(mapInstance.current);
+    setTimeout(() => mapInstance.current?.invalidateSize(), 200);
   }, []);
 
   // 타일 레이어 전환
